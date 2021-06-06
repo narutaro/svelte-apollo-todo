@@ -1,0 +1,43 @@
+query list_tasks($activeOnly: Boolean) {
+  tasks(activeOnly: $activeOnly) {
+    id
+    name
+    isActive
+    createdAt
+    updatedAt
+    owner
+  }
+}
+
+query get_task($id: ID!) {
+  task(id: $id) {
+    id
+    name
+    isActive
+    createdAt
+    updatedAt
+    owner
+  }
+}
+
+mutation add_task($name: String!) {
+  addTask(name: $name) {
+    id
+    name
+  }
+}
+
+mutation complete_task($id: ID!) {
+  completeTask(id: $id) {
+    id
+    name
+    isActive
+  }
+}
+
+mutation delete_task($id: ID!) {
+  deleteTask(id: $id) {
+    id
+    name
+  }
+}
