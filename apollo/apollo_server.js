@@ -5,8 +5,8 @@ const typeDefs = gql`
     id: ID!
     name: String!
     isActive: Boolean!
-    createdAt: Int
-    updatedAt: Int
+    createdAt: String
+    updatedAt: String
     owner: String
   }
 
@@ -24,13 +24,14 @@ const typeDefs = gql`
 `;
 
 const tasks = [
-  { id: 1, name: "Soak in an Onsen", isActive: true },
-  { id: 2, name: "Sing Karaoke", isActive: false },
-  { id: 3, name: "See cherry blossom", isActive: true },
+  { id: 1, name: "Soak in an Onsen", isActive: true, createdAt: "1622952189157", updatedAt: "1622952189157" },
+  { id: 2, name: "Sing Karaoke", isActive: false, createdAt: "1622952189157", updatedAt: "1622952189157" },
+  { id: 3, name: "See cherry blossom", isActive: true, createdAt: "1622952189157", updatedAt: "1622952189157" },
 ]
 
 const newId = () => { return !tasks.length ? 1 : Math.max(...tasks.map((t) => t.id)) + 1 }
-const now = () => { return Math.floor(Date.now()/1000) }
+//const now = () => { return Math.floor(Date.now()/1000) }
+const now = () => { return Math.floor(Date.now()) }
 
 const resolvers = {
   Query: {
@@ -40,7 +41,7 @@ const resolvers = {
       const { activeOnly } = args;
       if (activeOnly) {
         return context.db.filter((task) => task.isActive == true)
-      } else {
+      } else{
         return tasks
       }
     },

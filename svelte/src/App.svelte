@@ -26,10 +26,11 @@ $: {
 
 $: selected_task = first_task.refetch({ id: tid })
 
+// getTask
 const getTask = (taskId) => {
   modalOn = true;
   tid = taskId; 
-  console.log(taskId);
+  console.log('taskId', taskId);
 }
 
 // addTask
@@ -37,7 +38,7 @@ const add = mutation(add_task);
 const addTask = async (tname) => {
   mcnt++;
   const reply = await add({ variables: { name: tname } });
-  console.log('add', reply) // Storeじゃないっぽい
+  console.log('add', reply) 
 };
 
 // deleteTask
@@ -45,7 +46,7 @@ const del = mutation(delete_task);
 const deleteTask = async (tid) => {
   mcnt++;
   const reply = await del({ variables: { id: tid } });
-  console.log('del', reply) // Storeじゃないっぽい
+  console.log('del', reply) 
 };
 
 // completeTask
@@ -53,10 +54,16 @@ const done = mutation(complete_task);
 const completeTask = async (tid) => {
   mcnt++;
   const reply = await done({ variables: { id: tid } });
-  console.log('done', reply) // Storeじゃないっぽい
+  console.log('done', reply) 
 };
 
-const dummy = () => { console.log('dummuy called') }
+// format date
+function fd(date) {
+  console.log('fd called')
+  let d = new Date(parseInt(date))
+  return d.getFullYear() + '/' + d.getMonth() + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes()
+}
+
 </script>
 
 <main>
@@ -101,7 +108,7 @@ const dummy = () => { console.log('dummuy called') }
               <tr>
                 <td>{task.id}</td>
                 <td>{task.name}</td>
-                <td>{task.createdAt}</td>
+                <td>{fd(task.createdAt)}</td>
                 <td>{task.isActive}</td>
                 <td>
                   <i class="fas fa-check" on:click={ () => completeTask(task.id) }></i> 
@@ -127,12 +134,12 @@ const dummy = () => { console.log('dummuy called') }
             <tr><td>key</td><td>value</td></tr>
           </thead>
           <tbody>
-            <tr><td>task-id</td><td><span class="tag">{st.data.task.id}</span></td></tr>
-            <tr><td>task-name</td><td><span class="tag">{st.data.task.name}</span></td></tr>
-            <tr><td>created-at</td><td><span class="tag">{st.data.task.createdAt}</span></td></tr>
-            <tr><td>updated-at</td><td><span class="tag">{st.data.task.updateAt}</span></td></tr>
-            <tr><td>is-active</td><td><span class="tag">{st.data.task.isActive}</span></td></tr>
-            <tr><td>user-id</td><td><span class="tag">{st.data.task.userId}</span></td></tr>
+            <tr><td>id</td><td><span class="tag">{st.data.task.id}</span></td></tr>
+            <tr><td>name</td><td><span class="tag">{st.data.task.name}</span></td></tr>
+            <tr><td>createdAt</td><td><span class="tag">{fd(st.data.task.createdAt)}</span></td></tr>
+            <tr><td>updatedAt</td><td><span class="tag">{fd(st.data.task.updatedAt)}</span></td></tr>
+            <tr><td>isActive</td><td><span class="tag">{st.data.task.isActive}</span></td></tr>
+            <tr><td>owner</td><td><span class="tag">{st.data.task.userId}</span></td></tr>
           </tbody>
         </table>
         {/await}
