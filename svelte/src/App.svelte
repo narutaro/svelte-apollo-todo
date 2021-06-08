@@ -2,7 +2,7 @@
 let taskName;
 let activeOnly = true;
 let modalOn = false;
-let mcnt = 0; // mutation counter
+let mcnt = 0; // mutation counter to trigger reactivity
 let tid = 1;
 
 import { InMemoryCache, ApolloClient } from '@apollo/client';
@@ -21,7 +21,7 @@ const first_task = query(get_task);
 let current_tasks;
 $: {
      current_tasks = initial_tasks.refetch({ activeOnly: activeOnly });
-     console.log(mcnt); 
+     console.log(mcnt); // refer mcnt in order to trigger this $: 
 }
 
 $: selected_task = first_task.refetch({ id: tid })
@@ -38,6 +38,7 @@ const add = mutation(add_task);
 const addTask = async (tname) => {
   mcnt++;
   const reply = await add({ variables: { name: tname } });
+  taskName = '';
   console.log('add', reply) 
 };
 
@@ -63,6 +64,9 @@ function fd(date) {
   let d = new Date(parseInt(date))
   return d.getFullYear() + '/' + d.getMonth() + '/' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes()
 }
+
+// status text
+function statusText(taskStatus){ return taskStatus ? "Active" : "Done" }
 
 </script>
 
@@ -109,7 +113,7 @@ function fd(date) {
                 <td>{task.id}</td>
                 <td>{task.name}</td>
                 <td>{fd(task.createdAt)}</td>
-                <td>{task.isActive}</td>
+                <td>{statusText(task.isActive)}</td>
                 <td>
                   <i class="fas fa-check" on:click={ () => completeTask(task.id) }></i> 
                   <i class="fas fa-info" on:click={ () => getTask(task.id) }></i>
@@ -138,7 +142,7 @@ function fd(date) {
             <tr><td>name</td><td><span class="tag">{st.data.task.name}</span></td></tr>
             <tr><td>createdAt</td><td><span class="tag">{fd(st.data.task.createdAt)}</span></td></tr>
             <tr><td>updatedAt</td><td><span class="tag">{fd(st.data.task.updatedAt)}</span></td></tr>
-            <tr><td>isActive</td><td><span class="tag">{st.data.task.isActive}</span></td></tr>
+            <tr><td>isActive</td><td><span class="tag">{statusText(st.data.task.isActive)}</span></td></tr>
             <tr><td>owner</td><td><span class="tag">{st.data.task.userId}</span></td></tr>
           </tbody>
         </table>
